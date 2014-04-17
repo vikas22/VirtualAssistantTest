@@ -45,8 +45,16 @@ private static SWTBotTree tree = null;
 			 SWTBotShell shell=null;
 			Thread.sleep(30000);
 			 
-			//new SWTEclipseBot().view("Welcome").close();
-		 shell = bot.shell("Codelearn Plugin");
+		try
+		{
+			new SWTEclipseBot().view("Welcome").close();
+		
+		}
+		catch(Exception e)
+		{
+			System.out.println("processing");
+		}
+		shell = bot.shell("Codelearn Plugin");
 		shell.activate();
 		bot.button("OK").click();
 		}
@@ -97,16 +105,22 @@ private static SWTBotTree tree = null;
 		tree=bot.viewByTitle("Package Explorer").bot().tree();
 		tree.setFocus();
 		tree.select("CodelearnTwitterApp");
+		bot.menu("Run").menu("Run As").menu("1 Android App Codelearn").click();
+		
+		Thread.sleep(2000);
+		if(bot.shell("Launching CodelearnTwitterApp")!=null)
+		{
+		 shell=bot.shell("Launching CodelearnTwitterApp");
+		shell.activate(); 
+		bot.button("Run in Background").click();
+		}
 		}
 		catch(Exception e)
 		{
 			assertTrue("No project named CodelearnTwitterApp in CodlearnTwitterApp",false);
 		}
 		
-		bot.menu("Run").menu("Run As").menu("1 Android App Codelearn").click();
-		 shell=bot.shell("Launching CodelearnTwitterApp");
-		shell.activate(); 
-		bot.button("Run in Background").click();
+		
 		
 		try
 		{
