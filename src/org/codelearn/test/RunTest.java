@@ -1,19 +1,16 @@
 package org.codelearn.test;
 
-import static org.junit.Assert.*;
+import static org.eclipse.swtbot.swt.finder.waits.Conditions.shellCloses;
+import static org.junit.Assert.assertTrue;
 
-import javax.swing.text.View;
-
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.osgi.framework.Bundle;
 import org.eclipse.swtbot.eclipse.finder.SWTEclipseBot;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
+import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
+import org.junit.Before;
+import org.junit.Test;
 
 public class RunTest {
 
@@ -34,13 +31,22 @@ private static SWTBotTree tree = null;
 		
 		
 	}
+	
+	  private static SWTBotView getPackageExplorer() {
+	        SWTBotView view = bot.viewByTitle("Package Explorer");
+	        return view;
+	    }
+	    
 	@Test
 	public void CheckForSucessPopup() {
 		
 		try
 		{
-			new SWTEclipseBot().view("Welcome").close();
-		SWTBotShell shell = bot.shell("Codelearn Plugin");
+			 SWTBotShell shell=null;
+			Thread.sleep(30000);
+			 
+			//new SWTEclipseBot().view("Welcome").close();
+		 shell = bot.shell("Codelearn Plugin");
 		shell.activate();
 		bot.button("OK").click();
 		}
@@ -52,7 +58,27 @@ private static SWTBotTree tree = null;
 	@Test
 	public void CompleteProcess()
 	{
-	
+		SWTBotShell shell=null;
+		SWTBotView packageExplorer = getPackageExplorer();
+        SWTBotTree tree = packageExplorer.bot().tree();
+        packageExplorer.show();
+        try
+        {
+        if(tree.select("CodelearnTwitterApp")!=null)
+        {
+        tree.select("CodelearnTwitterApp");
+        bot.menu("Edit").menu("Delete").click();
+        shell= bot.shell("Delete Resources");
+        shell.activate();
+        bot.checkBox("Delete project contents on disk (cannot be undone)").select();
+        bot.button("OK").click();
+        bot.waitUntil(shellCloses(shell));
+        }
+        }
+        catch(Exception e)
+        {
+        	
+        }
 		bot.menu("File").menu("New").menu("Project...").click();
 		try
 		{
@@ -78,13 +104,14 @@ private static SWTBotTree tree = null;
 		}
 		
 		bot.menu("Run").menu("Run As").menu("1 Android App Codelearn").click();
-		SWTBotShell shell=bot.shell("Launching CodelearnTwitterApp");
+		 shell=bot.shell("Launching CodelearnTwitterApp");
 		shell.activate(); 
 		bot.button("Run in Background").click();
+		
 		try
 		{
 		
-		Thread.sleep(30000);
+		Thread.sleep(20000);
 		shell=bot.shell("Android AVD Error");
 		shell.activate(); 
 		bot.button("No").click();
