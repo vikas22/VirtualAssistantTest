@@ -125,7 +125,7 @@ private static SWTBotTree tree = null;
 		try
 		{
 		
-		Thread.sleep(20000);
+		Thread.sleep(35000);
 		shell=bot.shell("Android AVD Error");
 		shell.activate(); 
 		bot.button("No").click();
