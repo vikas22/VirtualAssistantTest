@@ -24,27 +24,50 @@ private static SWTBotTree tree = null;
 	}
 
 	
-	@Before
-	public void init()
-	{
-		
-		
-		
-	}
+	
 	
 	  private static SWTBotView getPackageExplorer() {
 	        SWTBotView view = bot.viewByTitle("Package Explorer");
 	        return view;
 	    }
-	    
+	
+
+		void click(SWTEclipseBot bot,String popup,String Button)
+		{
+			SWTBotShell shell = bot.shell(popup);
+			shell.activate();
+			bot.button(Button).click();
+		}
+		
+		
+		
+	  void wait(SWTEclipseBot bot, String popup)
+	  {
+		  try
+		  {
+		  while(true)
+		  {
+			  if(bot.shell(popup)!=null)
+			  {
+				  break;
+			  }
+			 
+		  }
+		  }
+		  catch(Exception e)
+		  {
+			  
+		  }
+		  return;
+		  
+	  }
 	@Test
 	public void CheckForSucessPopup() {
 		
 		try
 		{
 			 SWTBotShell shell=null;
-			Thread.sleep(30000);
-			 
+						 
 		try
 		{
 			new SWTEclipseBot().view("Welcome").close();
@@ -54,9 +77,8 @@ private static SWTBotTree tree = null;
 		{
 			System.out.println("processing");
 		}
-		shell = bot.shell("Codelearn Plugin");
-		shell.activate();
-		bot.button("OK").click();
+		wait(bot,"Codelearn Plugin");
+		click(bot,"Codelearn Plugin","OK");
 		}
 		catch(Exception e){assertTrue("Did not comeup with the success popup",false);}
 	
@@ -99,6 +121,8 @@ private static SWTBotTree tree = null;
 		
 		//bot.tree().select("Twitter App");
 		bot.button("Finish").click();
+		
+		
 	
 		try
 		{
@@ -107,13 +131,11 @@ private static SWTBotTree tree = null;
 		tree.select("CodelearnTwitterApp");
 		bot.menu("Run").menu("Run As").menu("1 Android App Codelearn").click();
 		
-		Thread.sleep(2000);
+		wait(bot,"Launching CodelearnTwitterApp");
 		if(bot.shell("Launching CodelearnTwitterApp")!=null)
 		{
-		 shell=bot.shell("Launching CodelearnTwitterApp");
-		shell.activate(); 
-		bot.button("Run in Background").click();
-		}
+			click(bot,"Launching CodelearnTwitterApp","Run in Background");
+		 }
 		}
 		catch(Exception e)
 		{
@@ -125,14 +147,24 @@ private static SWTBotTree tree = null;
 		try
 		{
 		
-		Thread.sleep(35000);
-		shell=bot.shell("Android AVD Error");
-		shell.activate(); 
-		bot.button("No").click();
+		wait(bot,"Android AVD Error");
+		while(true)
+		{
+			
+		try
+		{
+		click(bot,"Android AVD Error","No");
+		break;
+		}
 		
-		shell=bot.shell("Android Device Chooser");
-		shell.activate(); 
-		bot.button("Cancel").click();
+		catch(Exception e)
+		{
+			wait(bot,"Android AVD Error");
+			
+		}
+		}
+		
+		click(bot,"Android Device Chooser","Cancel");
 		
 		}
 		catch(Exception e)
@@ -142,10 +174,8 @@ private static SWTBotTree tree = null;
 		
 		try
 		{
-			Thread.sleep(10000);
-			 shell = bot.shell("Codelearn Plugin");
-			shell.activate();
-			bot.button("OK").click();
+			wait(bot,"Codelearn Plugin");
+			click(bot,"Codelearn Plugin","OK");
 		}
 		catch(Exception e){
 			System.out.println(e.toString());
