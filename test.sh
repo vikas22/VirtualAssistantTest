@@ -4,6 +4,7 @@ sed -i "s/true/false/" ~/Desktop/adt-bundle-linux-x86-20131030/eclipse/dropins/c
 
 workspace="/tmp/workspace"
 adt_bundle="/home/pocha/Desktop/adt-bundle-linux-x86-20131030"
+output_file=/tmp/out.xml
 mkdir $workspace
 java \
 -Xms256M -Xmx768M -XX:MaxPermSize=512M \
@@ -13,10 +14,10 @@ java \
 -testApplication org.eclipse.ui.ide.workbench \
 -data $workspace \
 -testPluginName VirtualAssistantTest \
-formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,/tmp/out.xml \
+formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,$output_file \
 formatter=org.apache.tools.ant.taskdefs.optional.junit.PlainJUnitResultFormatter \
 -className org.codelearn.test.RunTest \
 -os linux -ws gtk -arch x86 \
 -consoleLog -debug
 rm -rf $workspace
-
+cat $output_file | grep error
